@@ -466,7 +466,7 @@ public final class ChatListNode: ListView {
             self.chatListFilterValue.set(.single(self.chatListFilter))
             
             if self.chatListFilter != oldValue {
-                self.setChatListLocation(.initial(count: 50, filter: self.chatListFilter))
+                self.setChatListLocation(.initial(count: 10, filter: self.chatListFilter))
             }
         }
     }

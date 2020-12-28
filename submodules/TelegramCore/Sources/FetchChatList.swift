@@ -186,10 +186,10 @@ private func parseDialogs(apiDialogs: [Api.Dialog], apiMessages: [Api.Message], 
 struct FetchedChatList {
     let chatPeerIds: [PeerId]
     let peers: [Peer]
-    let peerPresences: [PeerId: PeerPresence]
-    let notificationSettings: [PeerId: PeerNotificationSettings]
-    let readStates: [PeerId: [MessageId.Namespace: PeerReadState]]
-    let mentionTagSummaries: [PeerId: MessageHistoryTagNamespaceSummary]
+    let peerPresences: [PeerId: PeerPresence]//在线状态
+    let notificationSettings: [PeerId: PeerNotificationSettings]//会话的通知设置
+    let readStates: [PeerId: [MessageId.Namespace: PeerReadState]]//已读未读
+    let mentionTagSummaries: [PeerId: MessageHistoryTagNamespaceSummary]//@提及
     let channelStates: [PeerId: Int32]
     let storeMessages: [StoreMessage]
     let topMessageIds: [PeerId: MessageId]

@@ -85,9 +85,9 @@ public final class ChatListSearchContainerNode: SearchDisplayControllerContentNo
     private let openMessage: (Peer, MessageId, Bool) -> Void
     private let navigationController: NavigationController?
     
-    let filterContainerNode: ChatListSearchFiltersContainerNode
-    private let paneContainerNode: ChatListSearchPaneContainerNode
-    private var selectionPanelNode: ChatListSearchMessageSelectionPanelNode?
+    let filterContainerNode: ChatListSearchFiltersContainerNode//顶部segment
+    private let paneContainerNode: ChatListSearchPaneContainerNode//内容部分 
+    private var selectionPanelNode: ChatListSearchMessageSelectionPanelNode?//底部菜单
     
     private var present: ((ViewController, Any?) -> Void)?
     private var presentInGlobalOverlay: ((ViewController, Any?) -> Void)?

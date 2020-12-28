@@ -68,14 +68,17 @@ func managedChatListHoles(network: Network, postbox: Postbox, accountPeerId: Pee
                 }
             }
             
+            //根据目前的拉取状态，更新是否需要 停止拉取/重新拉取
             let (removed, added) = state.with { state in
                 return state.update(entries: entries)
             }
             
+            //需要移除正在的fetch
             for disposable in removed {
                 disposable.dispose()
             }
             
+            //获取缺失的会话
             for (entry, disposable) in added {
                 disposable.set(fetchChatListHole(postbox: postbox, network: network, accountPeerId: accountPeerId, groupId: entry.groupId, hole: entry.hole).start())
             }

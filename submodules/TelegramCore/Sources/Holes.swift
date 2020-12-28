@@ -591,25 +591,36 @@ func fetchChatListHole(postbox: Postbox, network: Network, accountPeerId: PeerId
         case .group:
             location = .group(groupId)
     }
-    return fetchChatList(postbox: postbox, network: network, location: location, upperBound: hole.index, hash: 0, limit: 100)
+    return fetchChatList(postbox: postbox, network: network, location: location, upperBound: hole.index, hash: 0, limit: 10)
     |> mapToSignal { fetchedChats -> Signal<Never, NoError> in
         guard let fetchedChats = fetchedChats else {
+            //会话全部拉取完成
             return postbox.transaction { transaction -> Void in
                 transaction.replaceChatListHole(groupId: groupId, index: hole.index, hole: nil)
             }
             |> ignoreValues
         }
         return withResolvedAssociatedMessages(postbox: postbox, source: .network(network), peers: Dictionary(fetchedChats.peers.map({ ($0.id, $0) }), uniquingKeysWith: { lhs, _ in lhs }), storeMessages: fetchedChats.storeMessages, { transaction, additionalPeers, additionalMessages in
+            
+            //会话入库
             updatePeers(transaction: transaction, peers: fetchedChats.peers + additionalPeers, update: { _, updated -> Peer in
                 return updated
             })
             
+            //在线状态
             updatePeerPresences(transaction: transaction, accountPeerId: accountPeerId, peerPresences: fetchedChats.peerPresences)
+            
+            //通知设置
             transaction.updateCurrentPeerNotificationSettings(fetchedChats.notificationSettings)
+            
+            //最新消息
             let _ = transaction.addMessages(fetchedChats.storeMessages, location: .UpperHistoryBlock)
             let _ = transaction.addMessages(additionalMessages, location: .Random)
+            
+            //已读/未读
             transaction.resetIncomingReadStates(fetchedChats.readStates)
             
+            //更新offset
             transaction.replaceChatListHole(groupId: groupId, index: hole.index, hole: fetchedChats.lowerNonPinnedIndex.flatMap(ChatListHole.init))
             
             for peerId in fetchedChats.chatPeerIds {
