@@ -23,6 +23,8 @@ static_library(
         "//submodules/TelegramCallsUI/CallsEmoji:CallsEmoji",
         "//submodules/SemanticStatusNode:SemanticStatusNode",
         "//submodules/TooltipUI:TooltipUI",
+        "//submodules/AudioBlob:AudioBlob",
+        "//submodules/DeviceProximity:DeviceProximity",
     ],
     frameworks = [
         "$SDKROOT/System/Library/Frameworks/Foundation.framework",
